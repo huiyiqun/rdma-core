@@ -25,7 +25,15 @@
 #  -DKERNEL_DIR='.../linux' (default '')
 #      If set use the kernel UAPI headers from this kernel source tree.
 
-cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
+
+include("buildlib/HunterGate.cmake")
+
+HunterGate(
+    URL "https://github.com/huiyiqun/hunter/archive/master.tar.gz"
+    SHA1 "24eb3a34331b62f8104cb14d6b022826fc09675a"
+)
+
 project(rdma-core C)
 
 # CMake likes to use -rdynamic too much, they fixed it in 3.4.
@@ -273,6 +281,7 @@ if (NOT DEFINED ENABLE_RESOLVE_NEIGH)
   set(ENABLE_RESOLVE_NEIGH "ON" CACHE BOOL "Enable internal resolution of neighbours for Etherent")
 endif()
 if (ENABLE_RESOLVE_NEIGH)
+  hunter_add_package(libnl)
   # FIXME use of pkgconfig is discouraged
   pkg_check_modules(NL3 libnl-3.0 libnl-route-3.0)
   if (NL3_FOUND)
